@@ -4,6 +4,7 @@ import numpy as np
 import pyvisa
 import keysight_ktdaq970
 import matplotlib.pyplot as plt
+import csv
 
 
 def list_of_channels(str_chan: str):
@@ -239,7 +240,7 @@ if __name__ == "__main__":
     # シーケンス測定
     sequence = True
     # 測定回数
-    times = 100
+    times = 5
     # ==========
 
     """Basic Usage"""
@@ -305,6 +306,11 @@ if __name__ == "__main__":
             plt.pause(1)
             # データを保存
             result.append(_dcv)
+
+        with open('sample_writer_row.csv', 'w', newline='') as f:
+            writer = csv.writer(f)
+            for _i in range(len(result)):
+                writer.writerow(result[_i])
         
         print('測定が終わりました')
         plt.show()
