@@ -240,7 +240,7 @@ if __name__ == "__main__":
     # シーケンス測定
     sequence = True
     # 測定回数
-    times = 5
+    times = 10
     # ==========
 
     """Basic Usage"""
@@ -307,7 +307,7 @@ if __name__ == "__main__":
             # データを保存
             result.append(_dcv)
 
-        with open('sample_writer_row.csv', 'w', newline='') as f:
+        with open('エタノール.csv', 'w', newline='') as f:
             writer = csv.writer(f)
             for _i in range(len(result)):
                 writer.writerow(result[_i])
