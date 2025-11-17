@@ -12,7 +12,7 @@ class shot702:
 
     def __init__(self):
         # シリアル通信を確立する
-        self.ser = serial.Serial('COM4', baudrate=38400, bytesize=8, stopbits=1, rtscts=True, timeout=1, parity='N')
+        self.ser = serial.Serial('COM3', baudrate=38400, bytesize=8, stopbits=1, rtscts=True, timeout=1, parity='N')
 
     def abs_mov(self, axis, direction):
         # 絶対移動の関数
@@ -23,7 +23,7 @@ class shot702:
         axis = str(axis) # axisを文字列にする
         if (axis != '1') and (axis != '2') and (axis != 'W'):
             # axisに意図せぬ値を入れたとき用の分岐
-            print('shot702.abs_mov error: 変数axisに入れた値が不正です。')
+            # print('shot702.abs_mov error: 変数axisに入れた値が不正です。')
             return(-1)
         else: 
             if direction < 0:
@@ -34,26 +34,26 @@ class shot702:
                 pol = '+'
             movement = str(abs(int(direction))) # 移動量を文字列にする（SHOT702には整数しか入れられない）
             comm_abs_mov = 'A:' + axis + pol + 'P' + movement + '\r\n'
-            print(comm_abs_mov)
+            # print(comm_abs_mov)
             self.ser.write(comm_abs_mov.encode('utf-8'))
             shot_status = self.ser.read(10)
-            print('return: ' + shot_status.decode('utf-8'))
+            # print('return: ' + shot_status.decode('utf-8'))
             comm_exe = 'G:' + '\r\n'
-            print(comm_exe)
+            # print(comm_exe)
             self.ser.write(comm_exe.encode('utf-8'))
             shot_status = self.ser.read(10)
-            print('return: ' + shot_status.decode('utf-8'))
+            # print('return: ' + shot_status.decode('utf-8'))
             # ビジー状態かどうか取得する
             # ビジーの間、ループを抜け出せないようにする
             if_busy = '!:\r\n' # ビジーか問い合わせるコマンド
             self.ser.write(if_busy.encode('utf-8'))
             if_busy_ret = self.ser.read(10)
-            print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
+            # print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
             while(if_busy_ret.decode('utf-8') == 'B\r\n'):
                 if_busy = '!:\r\n'
                 self.ser.write(if_busy.encode('utf-8'))
                 if_busy_ret = self.ser.read(10)
-                print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
+                # print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
             return(0)
         
     def abs_mov_xy(self, x_pos, y_pos):
@@ -72,7 +72,7 @@ class shot702:
             # directionが正の数のとき
             x_pol = '+'
         shot_status = self.ser.read(10)
-        print('return: ' + shot_status.decode('utf-8'))
+        # print('return: ' + shot_status.decode('utf-8'))
 
         # y軸情報を記述
         if y_pos < 0:
@@ -82,29 +82,34 @@ class shot702:
             # directionが正の数のとき
             y_pol = '+'
         comm_abs_mov_xy = 'A:' + 'W' + x_pol + 'P' + x_movement + y_pol + 'P' + y_movement + '\r\n'
-        print(comm_abs_mov_xy)
+        # print(comm_abs_mov_xy)
         self.ser.write(comm_abs_mov_xy.encode('utf-8'))
         shot_status = self.ser.read(10)
-        print('return: ' + shot_status.decode('utf-8'))
+        # print('return: ' + shot_status.decode('utf-8'))
 
         # 実行
         comm_exe = 'G:' + '\r\n'
-        print(comm_exe)
+        # print(comm_exe)
         self.ser.write(comm_exe.encode('utf-8'))
         shot_status = self.ser.read(10)
-        print('return: ' + shot_status.decode('utf-8'))
+        # print('return: ' + shot_status.decode('utf-8'))
         # ビジー状態かどうか取得する
         # ビジーの間、ループを抜け出せないようにする
         if_busy = '!:\r\n' # ビジーか問い合わせるコマンド
         self.ser.write(if_busy.encode('utf-8'))
         if_busy_ret = self.ser.read(10)
-        print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
+        # print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
         while(if_busy_ret.decode('utf-8') == 'B\r\n'):
             if_busy = '!:\r\n'
             self.ser.write(if_busy.encode('utf-8'))
             if_busy_ret = self.ser.read(10)
-            print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
+            # print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
         return(0)
+    
+    def abs_angle(self, axis, degree):
+        # 角度移動をするときの関数
+        self.abs_mov(axis=axis, direction=degree*1000)
+        return()
 
         
     def rel_mov(self, axis, direction):
@@ -116,7 +121,7 @@ class shot702:
         axis = str(axis) # axisを文字列にする
         if (axis != '1') and (axis != '2') and (axis != 'W'):
             # axisに意図せぬ値を入れたとき用の分岐
-            print('shot702.abs_mov error: 変数axisに入れた値が不正です。')
+            # print('shot702.abs_mov error: 変数axisに入れた値が不正です。')
             return(-1)
         else: 
             if direction < 0:
@@ -127,26 +132,26 @@ class shot702:
                 pol = '+'
             movement = str(abs(int(direction))) # 移動量を文字列にする（SHOT702には整数しか入れられない）
             comm_abs_mov = 'M:' + axis + pol + 'P' + movement + '\r\n'
-            print(comm_abs_mov)
+            # print(comm_abs_mov)
             self.ser.write(comm_abs_mov.encode('utf-8'))
             shot_status = self.ser.read(10)
-            print('return: ' + shot_status.decode('utf-8'))
+            # print('return: ' + shot_status.decode('utf-8'))
             comm_exe = 'G:' + '\r\n'
-            print(comm_exe)
+            # print(comm_exe)
             self.ser.write(comm_exe.encode('utf-8'))
             shot_status = self.ser.read(10)
-            print('return: ' + shot_status.decode('utf-8'))
+            # print('return: ' + shot_status.decode('utf-8'))
             # ビジー状態かどうか取得する
             # ビジーの間、ループを抜け出せないようにする
             if_busy = '!:\r\n' # ビジーか問い合わせるコマンド
             self.ser.write(if_busy.encode('utf-8'))
             if_busy_ret = self.ser.read(10)
-            print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
+            # # print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
             while(if_busy_ret.decode('utf-8') == 'B\r\n'):
                 if_busy = '!:\r\n'
                 self.ser.write(if_busy.encode('utf-8'))
                 if_busy_ret = self.ser.read(10)
-                print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
+                # # print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
             return(0)
         
     def m_org(self, axis):
@@ -155,11 +160,24 @@ class shot702:
         axis = str(axis) # axisを文字列にする
         if (axis != '1') and (axis != '2') and (axis != 'W'):
             # axisに意図せぬ値を入れたとき用の分岐
-            print('shot702.M_org error: 変数axisに入れた値が不正です。')
+            # print('shot702.M_org error: 変数axisに入れた値が不正です。')
             return(-1)
         else: 
             comm_norstop = 'H:' + axis + '\r\n'
-            self.ser.write(comm_norstop.encode('utf^8'))
+            self.ser.write(comm_norstop.encode('utf-8'))
+            shot_status = self.ser.read(10)
+            # print('return: ' + shot_status.decode('utf-8'))
+            # ビジー状態かどうか取得する
+            # ビジーの間、ループを抜け出せないようにする
+            if_busy = '!:\r\n' # ビジーか問い合わせるコマンド
+            self.ser.write(if_busy.encode('utf-8'))
+            if_busy_ret = self.ser.read(10)
+            # print('if_busy_ret: ' + if_busy_ret.decode('utf-8'))
+            while(if_busy_ret.decode('utf-8') == 'B\r\n'):
+                if_busy = '!:\r\n'
+                self.ser.write(if_busy.encode('utf-8'))
+                if_busy_ret = self.ser.read(10)
+                # print('if_busy_ret in while: ' + if_busy_ret.decode('utf-8'))
             return(0)
     
     def normal_stop(self, axis):
@@ -168,7 +186,7 @@ class shot702:
         axis = str(axis) # axisを文字列にする
         if (axis != '1') and (axis != '2') and (axis != 'W'):
             # axisに意図せぬ値を入れたとき用の分岐
-            print('shot702.normal_stop error: 変数axisに入れた値が不正です。')
+            # print('shot702.normal_stop error: 変数axisに入れた値が不正です。')
             return(-1)
         else: 
             comm_norstop = 'L:' + axis + '\r\n'
@@ -192,21 +210,21 @@ class shot702:
         # axisは軸指定（1 or 2 or W)
         axis = str(axis) # axisを文字列にする
         if (parameter != 'V') and (parameter != 'P') and (parameter != 'S') and (parameter != 'D') and (parameter != 'B') and (parameter != 'A'):
-            print('shot702.info error: 変数parameterに入れた値が不正です。')
+            # print('shot702.info error: 変数parameterに入れた値が不正です。')
             return(-1)
         else:
             if (axis != '1') and (axis != '2') and (axis != 'W'):
                 # axisに意図せぬ値を入れたとき用の分岐
-                print('shot702.info error: 変数axisに入れた値が不正です。')
+                # print('shot702.info error: 変数axisに入れた値が不正です。')
                 return(-1)
             else:
                 if (parameter != 'A'):
                     # 全情報表示以外のとき
                     info_comm = '?:' + parameter + axis + '\r\n'
                     self.ser.write(info_comm.encode('utf-8'))
-                    print(info_comm)
+                    # print(info_comm)
                     info_data = self.ser.read(10)
-                    print("SHOT702 said " + str(info_data.decode('utf-8')))
+                    # print("SHOT702 said " + str(info_data.decode('utf-8')))
                     return(str(info_data.decode('utf-8')))
                 else:
                     # 全情報表示のとき
@@ -226,15 +244,15 @@ class shot702:
                             desc = '移動量: '
                         elif curr_para == 'B':
                             desc = '原点復帰速度: '
-                        print(desc + str(info_data.decode('utf-8')))
+                        # print(desc + str(info_data.decode('utf-8')))
                     return(1)
                 
     def position(self):
         pos_comm = 'Q:\r\n'
         self.ser.write(pos_comm.encode('utf-8'))
-        print(pos_comm)
+        # print(pos_comm)
         pos_data = self.ser.read(100)
-        print("SHOT702 said " + str(pos_data.decode('utf-8')))
+        # print("SHOT702 said " + str(pos_data.decode('utf-8')))
         return(str(pos_data.decode('utf-8')))
         
     def terminate(self):
@@ -247,19 +265,21 @@ if __name__ == "__main__":
     # クラスshot702のインスタンスを生成
     shot = shot702()
 
-    # リファレンス用座標
-    x_ref_abs = 20658
-    y_ref_abs = -20282
-    # infomation = shot.info('S', 1)
-    #mov = shot.abs_mov(1, 2500)
-    #mov = shot.abs_mov(2, 0)
-    # mov = shot.rel_mov(1,100)
-    # 絶対座標による移動
-    mov = shot.abs_mov_xy(-11920, 8700)
-    # ref_mov = shot.abs_mov_xy(x_ref_abs, y_ref_abs)
-    # 現在位置取得
-    position_return = shot.position()
-    print('Current Position is', position_return)
+    shot.m_org(axis='W')
+    # # リファレンス用座標
+    # x_ref_abs = 20658
+    # y_ref_abs = -20282
+    # # infomation = shot.info('S', 1)
+    # #mov = shot.abs_mov(1, 2500)
+    # #mov = shot.abs_mov(2, 0)
+    # # mov = shot.rel_mov(1,100)
+    # # 絶対座標による移動
+    # mov = shot.abs_mov_xy(-11920, 8700)
+    # # ref_mov = shot.abs_mov_xy(x_ref_abs, y_ref_abs)
+    # # 現在位置取得
+    # position_return = shot.position()
+    shot.abs_angle(axis='1', degree=45)
+    # print('Current Position is', position_return)
     # for i in range(1):
     #     mov = shot.rel_mov(1, 20)
     # mov = shot.rel_mov(1, 20)
